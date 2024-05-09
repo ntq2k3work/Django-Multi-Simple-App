@@ -1,0 +1,17 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>Contact</title> 
+</head> 
+<body> 
+    <h2>Contact Form</h2> 
+    <form method="post"> 
+        {% csrf_token %} 
+        {{ form.as_p }} 
+        <button type="submit">Submit</button> 
+    </form> 
+</body> 
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+</html>
