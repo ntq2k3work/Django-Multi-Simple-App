@@ -2,11 +2,30 @@ from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 import json
 from pytube import *
+from pytube.exceptions import RegexMatchError
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
+def getVideo(request):
+    link = (request.POST.get('link')).strip()
+    try:
+        video = YouTube(link)
+        if(video.length):
+            return JsonResponse({
+                'link':link
+            })
+        else:
+            return JsonResponse({
+               'status':404,
+               'message':'Không lấy được link'
+            })
+    except RegexMatchError:
+        return JsonResponse({
+            'status':404,
+           'message':'Không lấy được link'
+        })
 def Download(request):
-    link =request.POST.get('link')
+    link =json.dumps(getVideo(request)['link']) #Chuyển json thành string
     if(link):
         video = YouTube(link)
         # stream = video.streams.get_lowest_resolution()

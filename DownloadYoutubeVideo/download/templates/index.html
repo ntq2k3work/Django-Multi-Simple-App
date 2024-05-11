@@ -1,22 +1,51 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download Youtube Video</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <h1 style="text-align:center">Tải xuống video</h1>
     <form action="" id='form'>
         {% csrf_token %}
-        <label for="link">URL Video</label>
+        <label for="link" id='lable'>URL Video</label>
         <input type="text" name='link' id='link'><br>
-        <input type="submit" value="Tải xuống">
+        <input type="submit" value="Tải xuống" id='submit'>
     </form>
+    {% comment %} <video src="https://www.youtube.com/watch?v=GfyP_MYtLng" id='video'></video> {% endcomment %}
+    <iframe width="560" height="315" src="" frameborder="0" allowfullscreen id='video'></iframe>
+    <h2></h2>
+    
 </body>
     <script>
         $(document).ready(function(){
+            $('#link').on('input', function(e) {
+                e.preventDefault();
+                $.ajax({
+                  type: 'POST',
+                  url: "{% url 'getVideo' %}",
+                  data: {
+                    'link': $('#link').val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                  },
+                  success: function(data) {
+                    //console.log(data.link);
+                    if(data.link && data.status != 404){
+                        $('#video').attr('src', data.link);
+                    }else{
+                        $('#video').attr('src', "");
+                    }
+                  },
+                  error: function(errorThrown) {
+                    console.log(errorThrown);
+                  }
+                });
+              });
             $('#form').submit(function(e){
                 e.preventDefault();
                 $.ajax({
@@ -25,7 +54,7 @@
                     data: $(this).serialize(),
                     success: function(data){
                         //console.log(data.link);
-                        console.log(data)
+                        $('h2').text(data.message);
                     },
                     error: function(errorThrown) {
                         console.log(errorThrown);
