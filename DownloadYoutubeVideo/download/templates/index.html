@@ -55,6 +55,7 @@
                     success: function(data){
                         //console.log(data.link);
                         $('h2').text(data.message);
+                        console.log(data.link);
                     },
                     error: function(errorThrown) {
                         console.log(errorThrown);
