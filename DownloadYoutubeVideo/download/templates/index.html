@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Youtube Video</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form action="" id='form'>
+        {% csrf_token %}
+        <label for="link">URL Video</label>
+        <input type="text" name='link' id='link'><br>
+        <input type="submit" value="Tải xuống">
+    </form>
+</body>
+    <script>
+        $(document).ready(function(){
+            $('#form').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'Download' %}",
+                    data: $(this).serialize(),
+                    success: function(data){
+                        //console.log(data.link);
+                        console.log(data)
+                    },
+                    error: function(errorThrown) {
+                        console.log(errorThrown);
+                    }
+                })
+            });
+        });
+    </script>
+</html>
